@@ -1,0 +1,532 @@
+
+GccApplication1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000003b2  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000c  00800060  000003b2  00000446  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000020  0080006c  0080006c  00000452  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000452  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000484  2**2
+                  CONTENTS, READONLY
+  5 .debug_info   000002b8  00000000  00000000  000004c0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000294  00000000  00000000  00000778  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   000000cb  00000000  00000000  00000a0c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    000000f6  00000000  00000000  00000ad7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	09 c0       	rjmp	.+18     	; 0x14 <__ctors_end>
+   2:	21 c0       	rjmp	.+66     	; 0x46 <__bad_interrupt>
+   4:	20 c0       	rjmp	.+64     	; 0x46 <__bad_interrupt>
+   6:	1f c0       	rjmp	.+62     	; 0x46 <__bad_interrupt>
+   8:	1e c0       	rjmp	.+60     	; 0x46 <__bad_interrupt>
+   a:	1d c0       	rjmp	.+58     	; 0x46 <__bad_interrupt>
+   c:	1c c0       	rjmp	.+56     	; 0x46 <__bad_interrupt>
+   e:	1b c0       	rjmp	.+54     	; 0x46 <__bad_interrupt>
+  10:	1a c0       	rjmp	.+52     	; 0x46 <__bad_interrupt>
+  12:	19 c0       	rjmp	.+50     	; 0x46 <__bad_interrupt>
+
+00000014 <__ctors_end>:
+  14:	11 24       	eor	r1, r1
+  16:	1f be       	out	0x3f, r1	; 63
+  18:	cf e9       	ldi	r28, 0x9F	; 159
+  1a:	cd bf       	out	0x3d, r28	; 61
+
+0000001c <__do_copy_data>:
+  1c:	10 e0       	ldi	r17, 0x00	; 0
+  1e:	a0 e6       	ldi	r26, 0x60	; 96
+  20:	b0 e0       	ldi	r27, 0x00	; 0
+  22:	e2 eb       	ldi	r30, 0xB2	; 178
+  24:	f3 e0       	ldi	r31, 0x03	; 3
+  26:	02 c0       	rjmp	.+4      	; 0x2c <__do_copy_data+0x10>
+  28:	05 90       	lpm	r0, Z+
+  2a:	0d 92       	st	X+, r0
+  2c:	ac 36       	cpi	r26, 0x6C	; 108
+  2e:	b1 07       	cpc	r27, r17
+  30:	d9 f7       	brne	.-10     	; 0x28 <__do_copy_data+0xc>
+
+00000032 <__do_clear_bss>:
+  32:	20 e0       	ldi	r18, 0x00	; 0
+  34:	ac e6       	ldi	r26, 0x6C	; 108
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	01 c0       	rjmp	.+2      	; 0x3c <.do_clear_bss_start>
+
+0000003a <.do_clear_bss_loop>:
+  3a:	1d 92       	st	X+, r1
+
+0000003c <.do_clear_bss_start>:
+  3c:	ac 38       	cpi	r26, 0x8C	; 140
+  3e:	b2 07       	cpc	r27, r18
+  40:	e1 f7       	brne	.-8      	; 0x3a <.do_clear_bss_loop>
+  42:	11 d1       	rcall	.+546    	; 0x266 <main>
+  44:	b4 c1       	rjmp	.+872    	; 0x3ae <_exit>
+
+00000046 <__bad_interrupt>:
+  46:	dc cf       	rjmp	.-72     	; 0x0 <__vectors>
+
+00000048 <oneWireReset>:
+  48:	bb 9a       	sbi	0x17, 3	; 23
+  4a:	c3 98       	cbi	0x18, 3	; 24
+  4c:	8f e7       	ldi	r24, 0x7F	; 127
+  4e:	94 e0       	ldi	r25, 0x04	; 4
+  50:	01 97       	sbiw	r24, 0x01	; 1
+  52:	f1 f7       	brne	.-4      	; 0x50 <oneWireReset+0x8>
+  54:	00 c0       	rjmp	.+0      	; 0x56 <oneWireReset+0xe>
+  56:	00 00       	nop
+  58:	bb 98       	cbi	0x17, 3	; 23
+  5a:	c3 9a       	sbi	0x18, 3	; 24
+  5c:	90 ee       	ldi	r25, 0xE0	; 224
+  5e:	9a 95       	dec	r25
+  60:	f1 f7       	brne	.-4      	; 0x5e <oneWireReset+0x16>
+  62:	86 b3       	in	r24, 0x16	; 22
+  64:	e8 ed       	ldi	r30, 0xD8	; 216
+  66:	f3 e0       	ldi	r31, 0x03	; 3
+  68:	31 97       	sbiw	r30, 0x01	; 1
+  6a:	f1 f7       	brne	.-4      	; 0x68 <oneWireReset+0x20>
+  6c:	83 fb       	bst	r24, 3
+  6e:	88 27       	eor	r24, r24
+  70:	80 f9       	bld	r24, 0
+  72:	91 e0       	ldi	r25, 0x01	; 1
+  74:	89 27       	eor	r24, r25
+  76:	08 95       	ret
+
+00000078 <oneWireReadBit>:
+  78:	bb 9a       	sbi	0x17, 3	; 23
+  7a:	c3 98       	cbi	0x18, 3	; 24
+  7c:	83 e0       	ldi	r24, 0x03	; 3
+  7e:	8a 95       	dec	r24
+  80:	f1 f7       	brne	.-4      	; 0x7e <oneWireReadBit+0x6>
+  82:	00 00       	nop
+  84:	bb 98       	cbi	0x17, 3	; 23
+  86:	c3 9a       	sbi	0x18, 3	; 24
+  88:	90 e2       	ldi	r25, 0x20	; 32
+  8a:	9a 95       	dec	r25
+  8c:	f1 f7       	brne	.-4      	; 0x8a <oneWireReadBit+0x12>
+  8e:	86 b3       	in	r24, 0x16	; 22
+  90:	99 ea       	ldi	r25, 0xA9	; 169
+  92:	9a 95       	dec	r25
+  94:	f1 f7       	brne	.-4      	; 0x92 <oneWireReadBit+0x1a>
+  96:	00 c0       	rjmp	.+0      	; 0x98 <oneWireReadBit+0x20>
+  98:	83 fb       	bst	r24, 3
+  9a:	88 27       	eor	r24, r24
+  9c:	80 f9       	bld	r24, 0
+  9e:	08 95       	ret
+
+000000a0 <oneWireReadByte>:
+  a0:	cf 93       	push	r28
+  a2:	df 93       	push	r29
+  a4:	d8 e0       	ldi	r29, 0x08	; 8
+  a6:	c0 e0       	ldi	r28, 0x00	; 0
+  a8:	c6 95       	lsr	r28
+  aa:	e6 df       	rcall	.-52     	; 0x78 <oneWireReadBit>
+  ac:	81 11       	cpse	r24, r1
+  ae:	c0 68       	ori	r28, 0x80	; 128
+  b0:	d1 50       	subi	r29, 0x01	; 1
+  b2:	d1 f7       	brne	.-12     	; 0xa8 <oneWireReadByte+0x8>
+  b4:	8c 2f       	mov	r24, r28
+  b6:	df 91       	pop	r29
+  b8:	cf 91       	pop	r28
+  ba:	08 95       	ret
+
+000000bc <uart_transmit>:
+  bc:	c1 98       	cbi	0x18, 1	; 24
+  be:	e9 ef       	ldi	r30, 0xF9	; 249
+  c0:	f0 e0       	ldi	r31, 0x00	; 0
+  c2:	31 97       	sbiw	r30, 0x01	; 1
+  c4:	f1 f7       	brne	.-4      	; 0xc2 <uart_transmit+0x6>
+  c6:	00 c0       	rjmp	.+0      	; 0xc8 <uart_transmit+0xc>
+  c8:	98 e0       	ldi	r25, 0x08	; 8
+  ca:	80 ff       	sbrs	r24, 0
+  cc:	02 c0       	rjmp	.+4      	; 0xd2 <uart_transmit+0x16>
+  ce:	c1 9a       	sbi	0x18, 1	; 24
+  d0:	01 c0       	rjmp	.+2      	; 0xd4 <uart_transmit+0x18>
+  d2:	c1 98       	cbi	0x18, 1	; 24
+  d4:	e9 ef       	ldi	r30, 0xF9	; 249
+  d6:	f0 e0       	ldi	r31, 0x00	; 0
+  d8:	31 97       	sbiw	r30, 0x01	; 1
+  da:	f1 f7       	brne	.-4      	; 0xd8 <uart_transmit+0x1c>
+  dc:	00 c0       	rjmp	.+0      	; 0xde <uart_transmit+0x22>
+  de:	86 95       	lsr	r24
+  e0:	91 50       	subi	r25, 0x01	; 1
+  e2:	99 f7       	brne	.-26     	; 0xca <uart_transmit+0xe>
+  e4:	c1 9a       	sbi	0x18, 1	; 24
+  e6:	89 ef       	ldi	r24, 0xF9	; 249
+  e8:	90 e0       	ldi	r25, 0x00	; 0
+  ea:	01 97       	sbiw	r24, 0x01	; 1
+  ec:	f1 f7       	brne	.-4      	; 0xea <uart_transmit+0x2e>
+  ee:	00 c0       	rjmp	.+0      	; 0xf0 <uart_transmit+0x34>
+  f0:	08 95       	ret
+
+000000f2 <oneWireWriteBit>:
+  f2:	bb 9a       	sbi	0x17, 3	; 23
+  f4:	c3 98       	cbi	0x18, 3	; 24
+  f6:	88 23       	and	r24, r24
+  f8:	49 f0       	breq	.+18     	; 0x10c <oneWireWriteBit+0x1a>
+  fa:	83 e0       	ldi	r24, 0x03	; 3
+  fc:	8a 95       	dec	r24
+  fe:	f1 f7       	brne	.-4      	; 0xfc <oneWireWriteBit+0xa>
+ 100:	00 00       	nop
+ 102:	bb 98       	cbi	0x17, 3	; 23
+ 104:	80 ec       	ldi	r24, 0xC0	; 192
+ 106:	8a 95       	dec	r24
+ 108:	f1 f7       	brne	.-4      	; 0x106 <oneWireWriteBit+0x14>
+ 10a:	08 95       	ret
+ 10c:	80 ec       	ldi	r24, 0xC0	; 192
+ 10e:	8a 95       	dec	r24
+ 110:	f1 f7       	brne	.-4      	; 0x10e <oneWireWriteBit+0x1c>
+ 112:	bb 98       	cbi	0x17, 3	; 23
+ 114:	83 e0       	ldi	r24, 0x03	; 3
+ 116:	8a 95       	dec	r24
+ 118:	f1 f7       	brne	.-4      	; 0x116 <oneWireWriteBit+0x24>
+ 11a:	00 00       	nop
+ 11c:	08 95       	ret
+
+0000011e <oneWireWriteByte>:
+ 11e:	cf 93       	push	r28
+ 120:	df 93       	push	r29
+ 122:	d8 2f       	mov	r29, r24
+ 124:	c8 e0       	ldi	r28, 0x08	; 8
+ 126:	8d 2f       	mov	r24, r29
+ 128:	81 70       	andi	r24, 0x01	; 1
+ 12a:	e3 df       	rcall	.-58     	; 0xf2 <oneWireWriteBit>
+ 12c:	d6 95       	lsr	r29
+ 12e:	c1 50       	subi	r28, 0x01	; 1
+ 130:	d1 f7       	brne	.-12     	; 0x126 <oneWireWriteByte+0x8>
+ 132:	df 91       	pop	r29
+ 134:	cf 91       	pop	r28
+ 136:	08 95       	ret
+
+00000138 <oneWireSearch>:
+ 138:	5f 92       	push	r5
+ 13a:	6f 92       	push	r6
+ 13c:	7f 92       	push	r7
+ 13e:	8f 92       	push	r8
+ 140:	9f 92       	push	r9
+ 142:	af 92       	push	r10
+ 144:	bf 92       	push	r11
+ 146:	cf 92       	push	r12
+ 148:	df 92       	push	r13
+ 14a:	ef 92       	push	r14
+ 14c:	ff 92       	push	r15
+ 14e:	0f 93       	push	r16
+ 150:	1f 93       	push	r17
+ 152:	cf 93       	push	r28
+ 154:	df 93       	push	r29
+ 156:	cd b7       	in	r28, 0x3d	; 61
+ 158:	dd 27       	eor	r29, r29
+ 15a:	c8 50       	subi	r28, 0x08	; 8
+ 15c:	cd bf       	out	0x3d, r28	; 61
+ 15e:	8e 01       	movw	r16, r28
+ 160:	0f 5f       	subi	r16, 0xFF	; 255
+ 162:	1f 4f       	sbci	r17, 0xFF	; 255
+ 164:	28 e0       	ldi	r18, 0x08	; 8
+ 166:	f8 01       	movw	r30, r16
+ 168:	11 92       	st	Z+, r1
+ 16a:	2a 95       	dec	r18
+ 16c:	e9 f7       	brne	.-6      	; 0x168 <oneWireSearch+0x30>
+ 16e:	7c 01       	movw	r14, r24
+ 170:	61 2c       	mov	r6, r1
+ 172:	81 2c       	mov	r8, r1
+ 174:	cc 24       	eor	r12, r12
+ 176:	c3 94       	inc	r12
+ 178:	d1 2c       	mov	r13, r1
+ 17a:	5e 01       	movw	r10, r28
+ 17c:	f9 e0       	ldi	r31, 0x09	; 9
+ 17e:	af 0e       	add	r10, r31
+ 180:	b1 1c       	adc	r11, r1
+ 182:	62 df       	rcall	.-316    	; 0x48 <oneWireReset>
+ 184:	88 23       	and	r24, r24
+ 186:	09 f4       	brne	.+2      	; 0x18a <oneWireSearch+0x52>
+ 188:	5b c0       	rjmp	.+182    	; 0x240 <oneWireSearch+0x108>
+ 18a:	80 ef       	ldi	r24, 0xF0	; 240
+ 18c:	c8 df       	rcall	.-112    	; 0x11e <oneWireWriteByte>
+ 18e:	91 2c       	mov	r9, r1
+ 190:	71 2c       	mov	r7, r1
+ 192:	72 df       	rcall	.-284    	; 0x78 <oneWireReadBit>
+ 194:	58 2e       	mov	r5, r24
+ 196:	70 df       	rcall	.-288    	; 0x78 <oneWireReadBit>
+ 198:	55 20       	and	r5, r5
+ 19a:	19 f0       	breq	.+6      	; 0x1a2 <oneWireSearch+0x6a>
+ 19c:	88 23       	and	r24, r24
+ 19e:	f9 f0       	breq	.+62     	; 0x1de <oneWireSearch+0xa6>
+ 1a0:	4f c0       	rjmp	.+158    	; 0x240 <oneWireSearch+0x108>
+ 1a2:	81 11       	cpse	r24, r1
+ 1a4:	1c c0       	rjmp	.+56     	; 0x1de <oneWireSearch+0xa6>
+ 1a6:	96 14       	cp	r9, r6
+ 1a8:	a0 f4       	brcc	.+40     	; 0x1d2 <oneWireSearch+0x9a>
+ 1aa:	89 2d       	mov	r24, r9
+ 1ac:	86 95       	lsr	r24
+ 1ae:	86 95       	lsr	r24
+ 1b0:	86 95       	lsr	r24
+ 1b2:	f8 01       	movw	r30, r16
+ 1b4:	e8 0f       	add	r30, r24
+ 1b6:	f1 1d       	adc	r31, r1
+ 1b8:	80 81       	ld	r24, Z
+ 1ba:	90 e0       	ldi	r25, 0x00	; 0
+ 1bc:	29 2d       	mov	r18, r9
+ 1be:	27 70       	andi	r18, 0x07	; 7
+ 1c0:	02 c0       	rjmp	.+4      	; 0x1c6 <oneWireSearch+0x8e>
+ 1c2:	95 95       	asr	r25
+ 1c4:	87 95       	ror	r24
+ 1c6:	2a 95       	dec	r18
+ 1c8:	e2 f7       	brpl	.-8      	; 0x1c2 <oneWireSearch+0x8a>
+ 1ca:	28 2f       	mov	r18, r24
+ 1cc:	21 70       	andi	r18, 0x01	; 1
+ 1ce:	52 2e       	mov	r5, r18
+ 1d0:	06 c0       	rjmp	.+12     	; 0x1de <oneWireSearch+0xa6>
+ 1d2:	96 14       	cp	r9, r6
+ 1d4:	11 f0       	breq	.+4      	; 0x1da <oneWireSearch+0xa2>
+ 1d6:	79 2c       	mov	r7, r9
+ 1d8:	02 c0       	rjmp	.+4      	; 0x1de <oneWireSearch+0xa6>
+ 1da:	55 24       	eor	r5, r5
+ 1dc:	53 94       	inc	r5
+ 1de:	85 2d       	mov	r24, r5
+ 1e0:	88 df       	rcall	.-240    	; 0xf2 <oneWireWriteBit>
+ 1e2:	99 2d       	mov	r25, r9
+ 1e4:	96 95       	lsr	r25
+ 1e6:	96 95       	lsr	r25
+ 1e8:	96 95       	lsr	r25
+ 1ea:	89 2d       	mov	r24, r9
+ 1ec:	87 70       	andi	r24, 0x07	; 7
+ 1ee:	f8 01       	movw	r30, r16
+ 1f0:	e9 0f       	add	r30, r25
+ 1f2:	f1 1d       	adc	r31, r1
+ 1f4:	96 01       	movw	r18, r12
+ 1f6:	02 c0       	rjmp	.+4      	; 0x1fc <oneWireSearch+0xc4>
+ 1f8:	22 0f       	add	r18, r18
+ 1fa:	33 1f       	adc	r19, r19
+ 1fc:	8a 95       	dec	r24
+ 1fe:	e2 f7       	brpl	.-8      	; 0x1f8 <oneWireSearch+0xc0>
+ 200:	c9 01       	movw	r24, r18
+ 202:	55 20       	and	r5, r5
+ 204:	19 f0       	breq	.+6      	; 0x20c <oneWireSearch+0xd4>
+ 206:	90 81       	ld	r25, Z
+ 208:	89 2b       	or	r24, r25
+ 20a:	03 c0       	rjmp	.+6      	; 0x212 <oneWireSearch+0xda>
+ 20c:	80 95       	com	r24
+ 20e:	90 81       	ld	r25, Z
+ 210:	89 23       	and	r24, r25
+ 212:	80 83       	st	Z, r24
+ 214:	93 94       	inc	r9
+ 216:	30 e4       	ldi	r19, 0x40	; 64
+ 218:	93 12       	cpse	r9, r19
+ 21a:	bb cf       	rjmp	.-138    	; 0x192 <oneWireSearch+0x5a>
+ 21c:	f8 01       	movw	r30, r16
+ 21e:	d7 01       	movw	r26, r14
+ 220:	81 91       	ld	r24, Z+
+ 222:	8d 93       	st	X+, r24
+ 224:	ae 16       	cp	r10, r30
+ 226:	bf 06       	cpc	r11, r31
+ 228:	d9 f7       	brne	.-10     	; 0x220 <oneWireSearch+0xe8>
+ 22a:	83 94       	inc	r8
+ 22c:	77 20       	and	r7, r7
+ 22e:	41 f0       	breq	.+16     	; 0x240 <oneWireSearch+0x108>
+ 230:	88 e0       	ldi	r24, 0x08	; 8
+ 232:	e8 0e       	add	r14, r24
+ 234:	f1 1c       	adc	r15, r1
+ 236:	e4 e0       	ldi	r30, 0x04	; 4
+ 238:	8e 16       	cp	r8, r30
+ 23a:	11 f0       	breq	.+4      	; 0x240 <oneWireSearch+0x108>
+ 23c:	67 2c       	mov	r6, r7
+ 23e:	a1 cf       	rjmp	.-190    	; 0x182 <oneWireSearch+0x4a>
+ 240:	88 2d       	mov	r24, r8
+ 242:	c8 5f       	subi	r28, 0xF8	; 248
+ 244:	cd bf       	out	0x3d, r28	; 61
+ 246:	df 91       	pop	r29
+ 248:	cf 91       	pop	r28
+ 24a:	1f 91       	pop	r17
+ 24c:	0f 91       	pop	r16
+ 24e:	ff 90       	pop	r15
+ 250:	ef 90       	pop	r14
+ 252:	df 90       	pop	r13
+ 254:	cf 90       	pop	r12
+ 256:	bf 90       	pop	r11
+ 258:	af 90       	pop	r10
+ 25a:	9f 90       	pop	r9
+ 25c:	8f 90       	pop	r8
+ 25e:	7f 90       	pop	r7
+ 260:	6f 90       	pop	r6
+ 262:	5f 90       	pop	r5
+ 264:	08 95       	ret
+
+00000266 <main>:
+ 266:	87 b3       	in	r24, 0x17	; 23
+ 268:	8a 61       	ori	r24, 0x1A	; 26
+ 26a:	87 bb       	out	0x17, r24	; 23
+ 26c:	c4 98       	cbi	0x18, 4	; 24
+ 26e:	b9 9a       	sbi	0x17, 1	; 23
+ 270:	c1 9a       	sbi	0x18, 1	; 24
+ 272:	8c e6       	ldi	r24, 0x6C	; 108
+ 274:	90 e0       	ldi	r25, 0x00	; 0
+ 276:	60 df       	rcall	.-320    	; 0x138 <oneWireSearch>
+ 278:	c8 2e       	mov	r12, r24
+ 27a:	88 23       	and	r24, r24
+ 27c:	11 f0       	breq	.+4      	; 0x282 <main+0x1c>
+ 27e:	e1 2c       	mov	r14, r1
+ 280:	38 c0       	rjmp	.+112    	; 0x2f2 <main+0x8c>
+ 282:	8e e4       	ldi	r24, 0x4E	; 78
+ 284:	1b df       	rcall	.-458    	; 0xbc <uart_transmit>
+ 286:	8d e0       	ldi	r24, 0x0D	; 13
+ 288:	19 df       	rcall	.-462    	; 0xbc <uart_transmit>
+ 28a:	ff cf       	rjmp	.-2      	; 0x28a <main+0x24>
+ 28c:	ee 23       	and	r30, r30
+ 28e:	29 f0       	breq	.+10     	; 0x29a <main+0x34>
+ 290:	f0 e0       	ldi	r31, 0x00	; 0
+ 292:	e0 5a       	subi	r30, 0xA0	; 160
+ 294:	ff 4f       	sbci	r31, 0xFF	; 255
+ 296:	80 81       	ld	r24, Z
+ 298:	11 df       	rcall	.-478    	; 0xbc <uart_transmit>
+ 29a:	f8 01       	movw	r30, r16
+ 29c:	e0 5a       	subi	r30, 0xA0	; 160
+ 29e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 2a0:	80 81       	ld	r24, Z
+ 2a2:	0c df       	rcall	.-488    	; 0xbc <uart_transmit>
+ 2a4:	83 e4       	ldi	r24, 0x43	; 67
+ 2a6:	0a df       	rcall	.-492    	; 0xbc <uart_transmit>
+ 2a8:	8d e0       	ldi	r24, 0x0D	; 13
+ 2aa:	08 df       	rcall	.-496    	; 0xbc <uart_transmit>
+ 2ac:	ce 32       	cpi	r28, 0x2E	; 46
+ 2ae:	d1 05       	cpc	r29, r1
+ 2b0:	0c f0       	brlt	.+2      	; 0x2b4 <main+0x4e>
+ 2b2:	73 c0       	rjmp	.+230    	; 0x39a <main+0x134>
+ 2b4:	a8 97       	sbiw	r28, 0x28	; 40
+ 2b6:	0c f0       	brlt	.+2      	; 0x2ba <main+0x54>
+ 2b8:	d1 2c       	mov	r13, r1
+ 2ba:	f3 94       	inc	r15
+ 2bc:	cf 10       	cpse	r12, r15
+ 2be:	2d c0       	rjmp	.+90     	; 0x31a <main+0xb4>
+ 2c0:	e1 10       	cpse	r14, r1
+ 2c2:	6f c0       	rjmp	.+222    	; 0x3a2 <main+0x13c>
+ 2c4:	bb 20       	and	r11, r11
+ 2c6:	19 f0       	breq	.+6      	; 0x2ce <main+0x68>
+ 2c8:	c4 9a       	sbi	0x18, 4	; 24
+ 2ca:	ee 24       	eor	r14, r14
+ 2cc:	e3 94       	inc	r14
+ 2ce:	82 e5       	ldi	r24, 0x52	; 82
+ 2d0:	f5 de       	rcall	.-534    	; 0xbc <uart_transmit>
+ 2d2:	8a e3       	ldi	r24, 0x3A	; 58
+ 2d4:	f3 de       	rcall	.-538    	; 0xbc <uart_transmit>
+ 2d6:	80 e3       	ldi	r24, 0x30	; 48
+ 2d8:	8e 0d       	add	r24, r14
+ 2da:	f0 de       	rcall	.-544    	; 0xbc <uart_transmit>
+ 2dc:	8d e0       	ldi	r24, 0x0D	; 13
+ 2de:	ee de       	rcall	.-548    	; 0xbc <uart_transmit>
+ 2e0:	2f ef       	ldi	r18, 0xFF	; 255
+ 2e2:	8b e4       	ldi	r24, 0x4B	; 75
+ 2e4:	9d e1       	ldi	r25, 0x1D	; 29
+ 2e6:	21 50       	subi	r18, 0x01	; 1
+ 2e8:	80 40       	sbci	r24, 0x00	; 0
+ 2ea:	90 40       	sbci	r25, 0x00	; 0
+ 2ec:	e1 f7       	brne	.-8      	; 0x2e6 <main+0x80>
+ 2ee:	00 c0       	rjmp	.+0      	; 0x2f0 <main+0x8a>
+ 2f0:	00 00       	nop
+ 2f2:	aa de       	rcall	.-684    	; 0x48 <oneWireReset>
+ 2f4:	88 23       	and	r24, r24
+ 2f6:	21 f0       	breq	.+8      	; 0x300 <main+0x9a>
+ 2f8:	8c ec       	ldi	r24, 0xCC	; 204
+ 2fa:	11 df       	rcall	.-478    	; 0x11e <oneWireWriteByte>
+ 2fc:	84 e4       	ldi	r24, 0x44	; 68
+ 2fe:	0f df       	rcall	.-482    	; 0x11e <oneWireWriteByte>
+ 300:	2f ef       	ldi	r18, 0xFF	; 255
+ 302:	86 ee       	ldi	r24, 0xE6	; 230
+ 304:	98 e1       	ldi	r25, 0x18	; 24
+ 306:	21 50       	subi	r18, 0x01	; 1
+ 308:	80 40       	sbci	r24, 0x00	; 0
+ 30a:	90 40       	sbci	r25, 0x00	; 0
+ 30c:	e1 f7       	brne	.-8      	; 0x306 <main+0xa0>
+ 30e:	00 c0       	rjmp	.+0      	; 0x310 <main+0xaa>
+ 310:	00 00       	nop
+ 312:	f1 2c       	mov	r15, r1
+ 314:	dd 24       	eor	r13, r13
+ 316:	d3 94       	inc	r13
+ 318:	b1 2c       	mov	r11, r1
+ 31a:	96 de       	rcall	.-724    	; 0x48 <oneWireReset>
+ 31c:	88 23       	and	r24, r24
+ 31e:	69 f2       	breq	.-102    	; 0x2ba <main+0x54>
+ 320:	85 e5       	ldi	r24, 0x55	; 85
+ 322:	fd de       	rcall	.-518    	; 0x11e <oneWireWriteByte>
+ 324:	0f 2d       	mov	r16, r15
+ 326:	10 e0       	ldi	r17, 0x00	; 0
+ 328:	23 e0       	ldi	r18, 0x03	; 3
+ 32a:	00 0f       	add	r16, r16
+ 32c:	11 1f       	adc	r17, r17
+ 32e:	2a 95       	dec	r18
+ 330:	e1 f7       	brne	.-8      	; 0x32a <main+0xc4>
+ 332:	c0 e0       	ldi	r28, 0x00	; 0
+ 334:	d0 e0       	ldi	r29, 0x00	; 0
+ 336:	f8 01       	movw	r30, r16
+ 338:	ec 0f       	add	r30, r28
+ 33a:	fd 1f       	adc	r31, r29
+ 33c:	e4 59       	subi	r30, 0x94	; 148
+ 33e:	ff 4f       	sbci	r31, 0xFF	; 255
+ 340:	80 81       	ld	r24, Z
+ 342:	ed de       	rcall	.-550    	; 0x11e <oneWireWriteByte>
+ 344:	21 96       	adiw	r28, 0x01	; 1
+ 346:	c8 30       	cpi	r28, 0x08	; 8
+ 348:	d1 05       	cpc	r29, r1
+ 34a:	a9 f7       	brne	.-22     	; 0x336 <main+0xd0>
+ 34c:	8e eb       	ldi	r24, 0xBE	; 190
+ 34e:	e7 de       	rcall	.-562    	; 0x11e <oneWireWriteByte>
+ 350:	a7 de       	rcall	.-690    	; 0xa0 <oneWireReadByte>
+ 352:	c8 2f       	mov	r28, r24
+ 354:	a5 de       	rcall	.-694    	; 0xa0 <oneWireReadByte>
+ 356:	d0 e0       	ldi	r29, 0x00	; 0
+ 358:	d8 2b       	or	r29, r24
+ 35a:	84 e0       	ldi	r24, 0x04	; 4
+ 35c:	cc 0f       	add	r28, r28
+ 35e:	dd 1f       	adc	r29, r29
+ 360:	8a 95       	dec	r24
+ 362:	e1 f7       	brne	.-8      	; 0x35c <main+0xf6>
+ 364:	cd 2f       	mov	r28, r29
+ 366:	dd 0f       	add	r29, r29
+ 368:	dd 0b       	sbc	r29, r29
+ 36a:	81 e3       	ldi	r24, 0x31	; 49
+ 36c:	8f 0d       	add	r24, r15
+ 36e:	a6 de       	rcall	.-692    	; 0xbc <uart_transmit>
+ 370:	8a e3       	ldi	r24, 0x3A	; 58
+ 372:	a4 de       	rcall	.-696    	; 0xbc <uart_transmit>
+ 374:	d7 ff       	sbrs	r29, 7
+ 376:	07 c0       	rjmp	.+14     	; 0x386 <main+0x120>
+ 378:	8d e2       	ldi	r24, 0x2D	; 45
+ 37a:	a0 de       	rcall	.-704    	; 0xbc <uart_transmit>
+ 37c:	00 27       	eor	r16, r16
+ 37e:	11 27       	eor	r17, r17
+ 380:	0c 1b       	sub	r16, r28
+ 382:	1d 0b       	sbc	r17, r29
+ 384:	01 c0       	rjmp	.+2      	; 0x388 <main+0x122>
+ 386:	8e 01       	movw	r16, r28
+ 388:	e0 e0       	ldi	r30, 0x00	; 0
+ 38a:	0a 30       	cpi	r16, 0x0A	; 10
+ 38c:	11 05       	cpc	r17, r1
+ 38e:	0c f4       	brge	.+2      	; 0x392 <main+0x12c>
+ 390:	7d cf       	rjmp	.-262    	; 0x28c <main+0x26>
+ 392:	0a 50       	subi	r16, 0x0A	; 10
+ 394:	11 09       	sbc	r17, r1
+ 396:	ef 5f       	subi	r30, 0xFF	; 255
+ 398:	f8 cf       	rjmp	.-16     	; 0x38a <main+0x124>
+ 39a:	d1 2c       	mov	r13, r1
+ 39c:	bb 24       	eor	r11, r11
+ 39e:	b3 94       	inc	r11
+ 3a0:	8c cf       	rjmp	.-232    	; 0x2ba <main+0x54>
+ 3a2:	dd 20       	and	r13, r13
+ 3a4:	09 f4       	brne	.+2      	; 0x3a8 <main+0x142>
+ 3a6:	93 cf       	rjmp	.-218    	; 0x2ce <main+0x68>
+ 3a8:	c4 98       	cbi	0x18, 4	; 24
+ 3aa:	e1 2c       	mov	r14, r1
+ 3ac:	90 cf       	rjmp	.-224    	; 0x2ce <main+0x68>
+
+000003ae <_exit>:
+ 3ae:	f8 94       	cli
+
+000003b0 <__stop_program>:
+ 3b0:	ff cf       	rjmp	.-2      	; 0x3b0 <__stop_program>

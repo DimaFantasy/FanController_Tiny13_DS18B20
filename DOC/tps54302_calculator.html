@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор UVLO для TPS54302</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .formula-box {
+            font-size: 1.1rem;
+            border: 1px solid #cfe2ff;
+            border-radius: 0.25rem;
+            background-color: #f8f9fa;
+            min-width: 80%;
+        }
+        .result-value {
+            font-weight: bold;
+            color: #198754;
+            font-size: 1.1rem;
+        }
+        /* Стиль для вкладок - увеличение размера текста */
+        .nav-tabs .nav-link {
+            font-size: 1.15rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <h1 class="mb-4">Калькулятор для TPS54302</h1>
+        
+        <div class="card bg-light mb-4">
+            <div class="card-body">
+                <h3 class="card-title">TPS54302</h3>
+                <p>
+                    TPS54302 - это синхронный понижающий преобразователь с интегрированными ключами. 
+                    Он предназначен для работы в широком диапазоне входных напряжений и обеспечивает высокую эффективность преобразования.
+                    TPS54302 поддерживает различные функции защиты, включая защиту от перегрузки и защиту от короткого замыкания.   
+                    
+                </p>
+            </div>
+        </div>
+        
+        <div id="calculator-uvlo" class="mb-5">
+            <div class="p-4 border rounded bg-light mb-4">
+                <div class="bg-info p-3 mb-4 text-white rounded">
+                    <h2 class="mb-0 text-center">Калькулятор UVLO для расчета резисторов делителя напряжения и порогов включения/выключения</h2>
+                </div>
+                
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Константы:</h3>
+                        <p>I<sub>p</sub> = 0.7 μA</p>
+                        <p>I<sub>h</sub> = 1.55 μA</p>
+                        <p>V<sub>ENfalling</sub> = 1.19 V</p>
+                        <p>V<sub>ENrising</sub> = 1.22 V</p>
+                        <p>V<sub>IN(MAX)</sub> = 28 V</p>
+                        <p>V<sub>EN(MAX)</sub> = 7 V</p>
+                    </div>
+                </div>
+            
+                <ul class="nav nav-tabs mb-3" id="calculatorTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calc1-tab" data-bs-toggle="tab" data-bs-target="#calc1" type="button" role="tab" aria-controls="calc1" aria-selected="true">
+                            Расчет R4 и R5
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc2-tab" data-bs-toggle="tab" data-bs-target="#calc2" type="button" role="tab" aria-controls="calc2" aria-selected="false">
+                            Расчет V<sub>start</sub> и V<sub>stop</sub>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc3-tab" data-bs-toggle="tab" data-bs-target="#calc3" type="button" role="tab" aria-controls="calc3" aria-selected="false">
+                            Расчет V<sub>stop</sub> и R5
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc4-tab" data-bs-toggle="tab" data-bs-target="#calc4" type="button" role="tab" aria-controls="calc4" aria-selected="false">
+                            Расчет R4 и V<sub>start</sub>
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-4 border rounded bg-light" id="calculatorTabsContent">
+                    <!-- Калькулятор 1: Расчет R4 и R5 -->
+                    <div class="tab-pane fade show active" id="calc1" role="tabpanel" aria-labelledby="calc1-tab">
+                        <h2 class="mb-3">Расчет R4 и R5 (Основной расчёт)</h2>
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R4</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R4 = (V<sub>start</sub> * (V<sub>ENfalling</sub> / V<sub>ENrising</sub>) - V<sub>stop</sub>) / (I<sub>p</sub> * (1 - V<sub>ENfalling</sub> / V<sub>ENrising</sub>) + I<sub>h</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R5</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R5 = (R4 * V<sub>ENfalling</sub>) / (V<sub>stop</sub> - V<sub>ENfalling</sub> + R4 * (I<sub>p</sub> + I<sub>h</sub>))
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="vstart1" class="col-sm-3 col-form-label">V<sub>start</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vstart1" step="0.1" min="0" value="5.0" oninput="calculateR4R5()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vstop1" class="col-sm-3 col-form-label">V<sub>stop</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vstop1" step="0.1" min="0" value="4.5" oninput="calculateR4R5()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vin_check1" class="col-sm-3 col-form-label">V<sub>IN</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vin_check1" step="0.1" min="0" value="28" oninput="calculateR4R5()">
+                                    </div>
+                                </div>
+                                <div id="en_voltage1" class="alert mt-3" style="display: none;"></div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateR4R5(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="result1" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 2: Расчет V_start и V_stop -->
+                    <div class="tab-pane fade" id="calc2" role="tabpanel" aria-labelledby="calc2-tab">
+                        <h2 class="mb-3">Расчет V<sub>start</sub> и V<sub>stop</sub></h2>
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета V<sub>stop</sub></h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            V<sub>stop</sub> = V<sub>ENfalling</sub> + (R4 / R5) * V<sub>ENfalling</sub> - R4 * (I<sub>p</sub> + I<sub>h</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета V<sub>start</sub></h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            V<sub>start</sub> = (R4 * (I<sub>p</sub> * (1 - V<sub>ENfalling</sub> / V<sub>ENrising</sub>) + I<sub>h</sub>) + V<sub>stop</sub>) / (V<sub>ENfalling</sub> / V<sub>ENrising</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="r4_2" class="col-sm-3 col-form-label">R4 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r4_2" step="0.1" min="0" value="100" oninput="calculateVstartVstop()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="r5_2" class="col-sm-3 col-form-label">R5 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r5_2" step="0.1" min="0" value="10" oninput="calculateVstartVstop()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vin_check2" class="col-sm-3 col-form-label">V<sub>IN</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vin_check2" step="0.1" min="0" value="28" oninput="calculateVstartVstop()">
+                                    </div>
+                                </div>
+                                <div id="en_voltage2" class="alert mt-3" style="display: none;"></div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateVstartVstop(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="result2" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 3: Расчет V_stop и R5 -->
+                    <div class="tab-pane fade" id="calc3" role="tabpanel" aria-labelledby="calc3-tab">
+                        <h2 class="mb-3">Расчет V<sub>stop</sub> и R5 (частичный расчёт)</h2>
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета V<sub>stop</sub></h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            V<sub>stop</sub> = V<sub>start</sub> * (V<sub>ENfalling</sub> / V<sub>ENrising</sub>) - R4 * (I<sub>p</sub> * (1 - V<sub>ENfalling</sub> / V<sub>ENrising</sub>) + I<sub>h</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R5</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R5 = (R4 * V<sub>ENfalling</sub>) / (V<sub>stop</sub> - V<sub>ENfalling</sub> + R4 * (I<sub>p</sub> + I<sub>h</sub>))
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="vstart3" class="col-sm-3 col-form-label">V<sub>start</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vstart3" step="0.1" min="0" value="5.0" oninput="calculateVstopR5()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="r4_3" class="col-sm-3 col-form-label">R4 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r4_3" step="0.1" min="0" value="100" oninput="calculateVstopR5()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vin_check3" class="col-sm-3 col-form-label">V<sub>IN</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vin_check3" step="0.1" min="0" value="28" oninput="calculateVstopR5()">
+                                    </div>
+                                </div>
+                                <div id="en_voltage3" class="alert mt-3" style="display: none;"></div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateVstopR5(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="result3" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 4: Расчет R4 и V_start -->
+                    <div class="tab-pane fade" id="calc4" role="tabpanel" aria-labelledby="calc4-tab">
+                        <h2 class="mb-3">Расчет R4 и V<sub>start</sub> (дополнительный расчёт)</h2>
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R4</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R4 = (V<sub>stop</sub> - V<sub>ENfalling</sub>) / ((V<sub>ENfalling</sub> / R5) - (I<sub>p</sub> + I<sub>h</sub>))
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета V<sub>start</sub></h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            V<sub>start</sub> = (R4 * (I<sub>p</sub> * (1 - V<sub>ENfalling</sub> / V<sub>ENrising</sub>) + I<sub>h</sub>) + V<sub>stop</sub>) / (V<sub>ENfalling</sub> / V<sub>ENrising</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="vstop4" class="col-sm-3 col-form-label">V<sub>stop</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vstop4" step="0.1" min="0" value="4.5" oninput="calculateR4Vstart()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="r5_4" class="col-sm-3 col-form-label">R5 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r5_4" step="0.1" min="0" value="10" oninput="calculateR4Vstart()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vin_check4" class="col-sm-3 col-form-label">V<sub>IN</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vin_check4" step="0.1" min="0" value="28" oninput="calculateR4Vstart()">
+                                    </div>
+                                </div>
+                                <div id="en_voltage4" class="alert mt-3" style="display: none;"></div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateR4Vstart(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="result4" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="calculator-output-voltage" class="mb-5">
+            <div class="p-4 border rounded bg-light mb-4">
+                <div class="bg-info p-3 mb-4 text-white rounded">
+                    <h2 class="mb-0 text-center">Расчет стабилизированного выходного напряжения</h2>
+                </div>
+                
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Константы:</h3>
+                        <p>V<sub>ref</sub> = 0.596 V</p>
+                    </div>
+                </div>
+            
+                <ul class="nav nav-tabs mb-3" id="outputVoltageTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calc-r2-tab" data-bs-toggle="tab" data-bs-target="#calc-r2" type="button" role="tab" aria-controls="calc-r2" aria-selected="true">
+                            Расчет R2
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc-r3-tab" data-bs-toggle="tab" data-bs-target="#calc-r3" type="button" role="tab" aria-controls="calc-r3" aria-selected="false">
+                            Расчет R3
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc-vout-tab" data-bs-toggle="tab" data-bs-target="#calc-vout" type="button" role="tab" aria-controls="calc-vout" aria-selected="false">
+                            Расчет VOUT
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-4 border rounded bg-light" id="outputVoltageTabsContent">
+                    <!-- Калькулятор 1: Расчет R2 -->
+                    <div class="tab-pane fade show active" id="calc-r2" role="tabpanel" aria-labelledby="calc-r2-tab">
+                        <h2 class="mb-3">Расчет R2</h2>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R2</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R2 = R3 * ((V<sub>OUT</sub> / V<sub>ref</sub>) - 1)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="r3_calc3" class="col-sm-3 col-form-label">R3 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r3_calc3" step="0.1" min="0" value="2.2" oninput="calculateR2()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vout_calc3" class="col-sm-3 col-form-label">V<sub>OUT</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vout_calc3" step="0.1" min="0" value="3.3" oninput="calculateR2()">
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateR2(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="resultR2" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 2: Расчет R3 -->
+                    <div class="tab-pane fade" id="calc-r3" role="tabpanel" aria-labelledby="calc-r3-tab">
+                        <h2 class="mb-3">Расчет R3</h2>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета R3</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            R3 = (R2 * V<sub>ref</sub>) / (V<sub>OUT</sub> - V<sub>ref</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="r2_calc1" class="col-sm-3 col-form-label">R2 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r2_calc1" step="0.1" min="0" value="10.0" oninput="calculateR3()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vout_calc1" class="col-sm-3 col-form-label">V<sub>OUT</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vout_calc1" step="0.1" min="0" value="3.3" oninput="calculateR3()">
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateR3(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="resultR3" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 3: Расчет VOUT -->
+                    <div class="tab-pane fade" id="calc-vout" role="tabpanel" aria-labelledby="calc-vout-tab">
+                        <h2 class="mb-3">Расчет выходного напряжения VOUT</h2>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета VOUT</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            V<sub>OUT</sub> = V<sub>ref</sub> * ((R2 / R3) + 1)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="r2_calc2" class="col-sm-3 col-form-label">R2 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r2_calc2" step="0.1" min="0" value="10.0" oninput="calculateVOUT()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="r3_calc2" class="col-sm-3 col-form-label">R3 (кОм):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="r3_calc2" step="0.1" min="0" value="2.2" oninput="calculateVOUT()">
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateVOUT(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="resultVOUT" class="alert alert-success mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="calculator-inductor" class="mb-5">
+            <div class="p-4 border rounded bg-light mb-4">
+                <div class="bg-info p-3 mb-4 text-white rounded">
+                    <h2 class="mb-0 text-center">Расчет параметров индуктора</h2>
+                </div>
+                
+                <div class="card bg-light mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Константы:</h3>
+                        <p>f<sub>SW</sub> = 400 кГц (фиксировано)</p>
+                        <p>K = 0.2 — Коэффициент допустимой пульсации тока (0.2 = 20%)</p>
+                    </div>
+                </div>
+            
+                <ul class="nav nav-tabs mb-3" id="inductorTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="calc-lmin-tab" data-bs-toggle="tab" data-bs-target="#calc-lmin" type="button" role="tab" aria-controls="calc-lmin" aria-selected="true">
+                            Расчет LMIN
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="calc-ilmax-tab" data-bs-toggle="tab" data-bs-target="#calc-ilmax" type="button" role="tab" aria-controls="calc-ilmax" aria-selected="false">
+                            Расчет IL(MAX)
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-4 border rounded bg-light" id="inductorTabsContent">
+                    <!-- Калькулятор 1: Расчет LMIN -->
+                    <div class="tab-pane fade show active" id="calc-lmin" role="tabpanel" aria-labelledby="calc-lmin-tab">
+                        <h2 class="mb-3">Расчет минимального значения индуктивности</h2>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета LMIN</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            L<sub>MIN</sub> = (V<sub>OUT</sub> * (V<sub>IN(MAX)</sub> - V<sub>OUT</sub>)) / (V<sub>IN(MAX)</sub> * K * I<sub>OUT</sub> * f<sub>SW</sub>)
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="vout_ind1" class="col-sm-3 col-form-label">V<sub>OUT</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vout_ind1" step="0.1" min="0" value="3.3" oninput="calculateLMIN()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vinmax_ind1" class="col-sm-3 col-form-label">V<sub>IN(MAX)</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vinmax_ind1" step="0.1" min="0" value="28.0" oninput="calculateLMIN()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="kind_ind1" class="col-sm-3 col-form-label">K:</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="kind_ind1" step="0.1" min="0" value="0.2" oninput="calculateLMIN()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="iout_ind1" class="col-sm-3 col-form-label">I<sub>OUT</sub> (мА):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="iout_ind1" step="10" min="0" value="2000" oninput="calculateLMIN()">
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateLMIN(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="resultLMIN" class="alert alert-success mt-3" style="display: block;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Калькулятор 2: Расчет IL(MAX) -->
+                    <div class="tab-pane fade" id="calc-ilmax" role="tabpanel" aria-labelledby="calc-ilmax-tab">
+                        <h2 class="mb-3">Расчет максимального RMS тока в индукторе</h2>
+                        <div class="card border-primary mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Формула расчета IL(MAX)</h5>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="d-flex justify-content-center">
+                                    <div class="formula-box p-3">
+                                        <code class="fs-5">
+                                            I<sub>L(MAX)</sub> = sqrt(I<sub>OUT(MAX)</sub>^2 + (1/12 * (V<sub>OUT</sub> * (V<sub>IN(MAX)</sub> - V<sub>OUT</sub>) / (V<sub>IN(MAX)</sub> * L<sub>o</sub> * f<sub>SW</sub> * 0.8))^2))
+                                        </code>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Рассчитать значения</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 row">
+                                    <label for="ioutmax_ind2" class="col-sm-3 col-form-label">I<sub>OUT(MAX)</sub> (мА):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="ioutmax_ind2" step="10" min="0" value="2000" oninput="calculateILMAX()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vout_ind2" class="col-sm-3 col-form-label">V<sub>OUT</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vout_ind2" step="0.1" min="0" value="3.3" oninput="calculateILMAX()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="vinmax_ind2" class="col-sm-3 col-form-label">V<sub>IN(MAX)</sub> (В):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="vinmax_ind2" step="0.1" min="0" value="28.0" oninput="calculateILMAX()">
+                                    </div>
+                                </div>
+                                <div class="mb-3 row">
+                                    <label for="lo_ind2" class="col-sm-3 col-form-label">L<sub>o</sub> (мкГн):</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="lo_ind2" step="0.1" min="0" value="22.0" oninput="calculateILMAX()">
+                                    </div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <button type="button" class="btn btn-success btn-lg" onclick="calculateILMAX(); return false;">Рассчитать</button>
+                                </div>
+                                <div id="resultILMAX" class="alert alert-success mt-3" style="display: block;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Подключение Bootstrap JS и Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Константы
+        const Ip = 0.7e-6; // микроамперы
+        const Ih = 1.55e-6; // микроамперы
+        const VENfalling = 1.19; // вольты
+        const VENrising = 1.22; // вольты
+        const Vref = 0.596; // вольты для Output Voltage Set Point
+
+        // Расчет 1: R4 и R5
+        function calculateR4R5() {
+            const Vstart = parseFloat(document.getElementById("vstart1").value);
+            const Vstop = parseFloat(document.getElementById("vstop1").value);
+            const VinCheck = parseFloat(document.getElementById("vin_check1").value);
+            
+            // Проверка ввода
+            if (isNaN(Vstart) || isNaN(Vstop) || isNaN(VinCheck) || Vstart <= 0 || Vstop <= 0 || VinCheck <= 0) {
+                document.getElementById("result1").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("result1").className = "alert alert-danger mt-3";
+                document.getElementById("result1").style.display = "block";
+                document.getElementById("en_voltage1").style.display = "none";
+                return;
+            }
+            
+            // Расчеты
+            const R4 = (Vstart * (VENfalling / VENrising) - Vstop) / (Ip * (1 - VENfalling / VENrising) + Ih);
+            const R5 = (R4 * VENfalling) / (Vstop - VENfalling + R4 * (Ip + Ih));
+            
+            // Преобразуем в кОм для отображения
+            const R4_kohm = R4 / 1000;
+            const R5_kohm = R5 / 1000;
+            
+            // Расчет напряжения на пине EN
+            const V_EN = VinCheck * (R5 / (R4 + R5)) - R5 * (Ip + Ih);
+            const isENOverLimit = V_EN > 7;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>V<sub>start</sub> (В) =</strong> <span class="result-value">${Vstart.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>V<sub>stop</sub> (В) =</strong> <span class="result-value">${Vstop.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>R4 =</strong> <span class="result-value">${R4_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R5 =</strong> <span class="result-value">${R5_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>Гистерезис =</strong> <span class="result-value">${(Vstart - Vstop).toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            const enVoltageHTML = `
+                <h3 class="text-${isENOverLimit ? 'danger' : 'success'}">Напряжение на пине EN при VIN = ${VinCheck} В:</h3>
+                <div class="result-box p-3 border border-${isENOverLimit ? 'danger' : 'success'} rounded bg-light">
+                    <p class="mb-0"><strong>V<sub>EN</sub> =</strong> <span class="result-value" style="color: ${isENOverLimit ? 'red' : '#198754'}">${V_EN.toFixed(2)} В ${isENOverLimit ? ' (Превышено предельное значение 7В!)' : ''}</span></p>
+                </div>
+            `;
+            
+            document.getElementById("result1").innerHTML = resultHTML;
+            document.getElementById("result1").className = "alert alert-success mt-3";
+            document.getElementById("result1").style.display = "block";
+            
+            document.getElementById("en_voltage1").innerHTML = enVoltageHTML;
+            document.getElementById("en_voltage1").className = `alert ${isENOverLimit ? 'alert-danger' : 'alert-success'} mt-3`;
+            document.getElementById("en_voltage1").style.display = "block";
+        }
+
+        // Расчет 2: V_start и V_stop
+        function calculateVstartVstop() {
+            const R4 = parseFloat(document.getElementById("r4_2").value) * 1000; // перевод в омы
+            const R5 = parseFloat(document.getElementById("r5_2").value) * 1000; // перевод в омы
+            const VinCheck = parseFloat(document.getElementById("vin_check2").value);
+            
+            // Проверка ввода
+            if (isNaN(R4) || isNaN(R5) || isNaN(VinCheck) || R4 <= 0 || R5 <= 0 || VinCheck <= 0) {
+                document.getElementById("result2").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("result2").className = "alert alert-danger mt-3";
+                document.getElementById("result2").style.display = "block";
+                document.getElementById("en_voltage2").style.display = "none";
+                return;
+            }
+            
+            // Расчеты
+            const Vstop = VENfalling + (R4 / R5) * VENfalling - R4 * (Ip + Ih);
+            const Vstart = (R4 * (Ip * (1 - VENfalling / VENrising) + Ih) + Vstop) / (VENfalling / VENrising);
+            
+            // Расчет напряжения на пине EN
+            const V_EN = VinCheck * (R5 / (R4 + R5)) - R5 * (Ip + Ih);
+            const isENOverLimit = V_EN > 7;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>V<sub>start</sub> (В) =</strong> <span class="result-value">${Vstart.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>V<sub>stop</sub> (В) =</strong> <span class="result-value">${Vstop.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>R4 =</strong> <span class="result-value">${(R4/1000).toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R5 =</strong> <span class="result-value">${(R5/1000).toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>Гистерезис =</strong> <span class="result-value">${(Vstart - Vstop).toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            const enVoltageHTML = `
+                <h3 class="text-${isENOverLimit ? 'danger' : 'success'}">Напряжение на пине EN при VIN = ${VinCheck} В:</h3>
+                <div class="result-box p-3 border border-${isENOverLimit ? 'danger' : 'success'} rounded bg-light">
+                    <p class="mb-0"><strong>V<sub>EN</sub> =</strong> <span class="result-value" style="color: ${isENOverLimit ? 'red' : '#198754'}">${V_EN.toFixed(2)} В ${isENOverLimit ? ' (Превышено предельное значение 7В!)' : ''}</span></p>
+                </div>
+            `;
+            
+            document.getElementById("result2").innerHTML = resultHTML;
+            document.getElementById("result2").className = "alert alert-success mt-3";
+            document.getElementById("result2").style.display = "block";
+            
+            document.getElementById("en_voltage2").innerHTML = enVoltageHTML;
+            document.getElementById("en_voltage2").className = `alert ${isENOverLimit ? 'alert-danger' : 'alert-success'} mt-3`;
+            document.getElementById("en_voltage2").style.display = "block";
+        }
+
+        // Расчет 3: V_stop и R5
+        function calculateVstopR5() {
+            const Vstart = parseFloat(document.getElementById("vstart3").value);
+            const R4 = parseFloat(document.getElementById("r4_3").value) * 1000; // перевод в омы
+            const VinCheck = parseFloat(document.getElementById("vin_check3").value);
+            
+            // Проверка ввода
+            if (isNaN(Vstart) || isNaN(R4) || isNaN(VinCheck) || Vstart <= 0 || R4 <= 0 || VinCheck <= 0) {
+                document.getElementById("result3").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("result3").className = "alert alert-danger mt-3";
+                document.getElementById("result3").style.display = "block";
+                document.getElementById("en_voltage3").style.display = "none";
+                return;
+            }
+            
+            // Расчеты
+            const Vstop = Vstart * (VENfalling / VENrising) - R4 * (Ip * (1 - VENfalling / VENrising) + Ih);
+            const R5 = (R4 * VENfalling) / (Vstop - VENfalling + R4 * (Ip + Ih));
+            
+            // Преобразуем в кОм для отображения
+            const R5_kohm = R5 / 1000;
+            
+            // Расчет напряжения на пине EN
+            const V_EN = VinCheck * (R5 / (R4 + R5)) - R5 * (Ip + Ih);
+            const isENOverLimit = V_EN > 7;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>V<sub>start</sub> (В) =</strong> <span class="result-value">${Vstart.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>V<sub>stop</sub> (В) =</strong> <span class="result-value">${Vstop.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>R4 =</strong> <span class="result-value">${(R4/1000).toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R5 =</strong> <span class="result-value">${R5_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>Гистерезис =</strong> <span class="result-value">${(Vstart - Vstop).toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            const enVoltageHTML = `
+                <h3 class="text-${isENOverLimit ? 'danger' : 'success'}">Напряжение на пине EN при VIN = ${VinCheck} В:</h3>
+                <div class="result-box p-3 border border-${isENOverLimit ? 'danger' : 'success'} rounded bg-light">
+                    <p class="mb-0"><strong>V<sub>EN</sub> =</strong> <span class="result-value" style="color: ${isENOverLimit ? 'red' : '#198754'}">${V_EN.toFixed(2)} В ${isENOverLimit ? ' (Превышено предельное значение 7В!)' : ''}</span></p>
+                </div>
+            `;
+            
+            document.getElementById("result3").innerHTML = resultHTML;
+            document.getElementById("result3").className = "alert alert-success mt-3";
+            document.getElementById("result3").style.display = "block";
+            
+            document.getElementById("en_voltage3").innerHTML = enVoltageHTML;
+            document.getElementById("en_voltage3").className = `alert ${isENOverLimit ? 'alert-danger' : 'alert-success'} mt-3`;
+            document.getElementById("en_voltage3").style.display = "block";
+        }
+
+        // Расчет 4: R4 и V_start
+        function calculateR4Vstart() {
+            const Vstop = parseFloat(document.getElementById("vstop4").value);
+            const R5 = parseFloat(document.getElementById("r5_4").value) * 1000; // перевод в омы
+            const VinCheck = parseFloat(document.getElementById("vin_check4").value);
+            
+            // Проверка ввода
+            if (isNaN(Vstop) || isNaN(R5) || isNaN(VinCheck) || Vstop <= 0 || R5 <= 0 || VinCheck <= 0) {
+                document.getElementById("result4").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("result4").className = "alert alert-danger mt-3";
+                document.getElementById("result4").style.display = "block";
+                document.getElementById("en_voltage4").style.display = "none";
+                return;
+            }
+            
+            // Расчеты
+            const R4 = (Vstop - VENfalling) / ((VENfalling / R5) - (Ip + Ih));
+            const Vstart = (R4 * (Ip * (1 - VENfalling / VENrising) + Ih) + Vstop) / (VENfalling / VENrising);
+            
+            // Преобразуем в кОм для отображения
+            const R4_kohm = R4 / 1000;
+            
+            // Расчет напряжения на пине EN
+            const V_EN = VinCheck * (R5 / (R4 + R5)) - R5 * (Ip + Ih);
+            const isENOverLimit = V_EN > 7;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>V<sub>start</sub> (В) =</strong> <span class="result-value">${Vstart.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>V<sub>stop</sub> (В) =</strong> <span class="result-value">${Vstop.toFixed(2)} В</span></p>
+                    <p class="mb-2"><strong>R4 =</strong> <span class="result-value">${R4_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R5 =</strong> <span class="result-value">${(R5/1000).toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>Гистерезис =</strong> <span class="result-value">${(Vstart - Vstop).toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            const enVoltageHTML = `
+                <h3 class="text-${isENOverLimit ? 'danger' : 'success'}">Напряжение на пине EN при VIN = ${VinCheck} В:</h3>
+                <div class="result-box p-3 border border-${isENOverLimit ? 'danger' : 'success'} rounded bg-light">
+                    <p class="mb-0"><strong>V<sub>EN</sub> =</strong> <span class="result-value" style="color: ${isENOverLimit ? 'red' : '#198754'}">${V_EN.toFixed(2)} В ${isENOverLimit ? ' (Превышено предельное значение 7В!)' : ''}</span></p>
+                </div>
+            `;
+            
+            document.getElementById("result4").innerHTML = resultHTML;
+            document.getElementById("result4").className = "alert alert-success mt-3";
+            document.getElementById("result4").style.display = "block";
+            
+            document.getElementById("en_voltage4").innerHTML = enVoltageHTML;
+            document.getElementById("en_voltage4").className = `alert ${isENOverLimit ? 'alert-danger' : 'alert-success'} mt-3`;
+            document.getElementById("en_voltage4").style.display = "block";
+        }
+
+        // Расчет R3
+        function calculateR3() {
+            const R2 = parseFloat(document.getElementById("r2_calc1").value) * 1000; // перевод в омы
+            const VOUT = parseFloat(document.getElementById("vout_calc1").value);
+            
+            // Проверка ввода
+            if (isNaN(R2) || isNaN(VOUT) || R2 <= 0 || VOUT <= 0) {
+                document.getElementById("resultR3").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("resultR3").className = "alert alert-danger mt-3";
+                document.getElementById("resultR3").style.display = "block";
+                return;
+            }
+            
+            // Проверка, чтобы Vout был больше Vref
+            if (VOUT <= Vref) {
+                document.getElementById("resultR3").innerHTML = "Ошибка: V<sub>OUT</sub> должно быть больше V<sub>ref</sub> (0.596 В)";
+                document.getElementById("resultR3").className = "alert alert-danger mt-3";
+                document.getElementById("resultR3").style.display = "block";
+                return;
+            }
+            
+            // Расчеты
+            const R3 = (R2 * Vref) / (VOUT - Vref);
+            
+            // Преобразуем в кОм для отображения
+            const R3_kohm = R3 / 1000;
+            const R2_kohm = R2 / 1000;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>R2 =</strong> <span class="result-value">${R2_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R3 =</strong> <span class="result-value">${R3_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>VOUT =</strong> <span class="result-value">${VOUT.toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            document.getElementById("resultR3").innerHTML = resultHTML;
+            document.getElementById("resultR3").className = "alert alert-success mt-3";
+            document.getElementById("resultR3").style.display = "block";
+        }
+
+        // Расчет VOUT
+        function calculateVOUT() {
+            const R2 = parseFloat(document.getElementById("r2_calc2").value) * 1000; // перевод в омы
+            const R3 = parseFloat(document.getElementById("r3_calc2").value) * 1000; // перевод в омы
+            
+            // Проверка ввода
+            if (isNaN(R2) || isNaN(R3) || R2 <= 0 || R3 <= 0) {
+                document.getElementById("resultVOUT").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("resultVOUT").className = "alert alert-danger mt-3";
+                document.getElementById("resultVOUT").style.display = "block";
+                return;
+            }
+            
+            // Расчеты
+            const VOUT = Vref * ((R2 / R3) + 1);
+            
+            // Преобразуем в кОм для отображения
+            const R2_kohm = R2 / 1000;
+            const R3_kohm = R3 / 1000;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>R2 =</strong> <span class="result-value">${R2_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R3 =</strong> <span class="result-value">${R3_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>VOUT =</strong> <span class="result-value">${VOUT.toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            document.getElementById("resultVOUT").innerHTML = resultHTML;
+            document.getElementById("resultVOUT").className = "alert alert-success mt-3";
+            document.getElementById("resultVOUT").style.display = "block";
+        }
+
+        // Расчет R2
+        function calculateR2() {
+            const R3 = parseFloat(document.getElementById("r3_calc3").value) * 1000; // перевод в омы
+            const VOUT = parseFloat(document.getElementById("vout_calc3").value);
+            
+            // Проверка ввода
+            if (isNaN(R3) || isNaN(VOUT) || R3 <= 0 || VOUT <= 0) {
+                document.getElementById("resultR2").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("resultR2").className = "alert alert-danger mt-3";
+                document.getElementById("resultR2").style.display = "block";
+                return;
+            }
+            
+            // Проверка, чтобы Vout был больше Vref
+            if (VOUT <= Vref) {
+                document.getElementById("resultR2").innerHTML = "Ошибка: V<sub>OUT</sub> должно быть больше V<sub>ref</sub> (0.596 В)";
+                document.getElementById("resultR2").className = "alert alert-danger mt-3";
+                document.getElementById("resultR2").style.display = "block";
+                return;
+            }
+            
+            // Расчеты
+            const R2 = R3 * ((VOUT / Vref) - 1);
+            
+            // Преобразуем в кОм для отображения
+            const R2_kohm = R2 / 1000;
+            const R3_kohm = R3 / 1000;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>R2 =</strong> <span class="result-value">${R2_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-2"><strong>R3 =</strong> <span class="result-value">${R3_kohm.toFixed(2)} кОм</span></p>
+                    <p class="mb-0"><strong>VOUT =</strong> <span class="result-value">${VOUT.toFixed(2)} В</span></p>
+                </div>
+            `;
+            
+            document.getElementById("resultR2").innerHTML = resultHTML;
+            document.getElementById("resultR2").className = "alert alert-success mt-3";
+            document.getElementById("resultR2").style.display = "block";
+        }
+
+        // Расчет LMIN
+        function calculateLMIN() {
+            const VOUT = parseFloat(document.getElementById("vout_ind1").value);
+            const VINMAX = parseFloat(document.getElementById("vinmax_ind1").value);
+            const KInd = parseFloat(document.getElementById("kind_ind1").value);
+            const IOUT = parseFloat(document.getElementById("iout_ind1").value) / 1000; // перевод в амперы
+            
+            // Проверка ввода
+            if (isNaN(VOUT) || isNaN(VINMAX) || isNaN(KInd) || isNaN(IOUT) || VOUT <= 0 || VINMAX <= 0 || KInd <= 0 || IOUT <= 0) {
+                document.getElementById("resultLMIN").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("resultLMIN").className = "alert alert-danger mt-3";
+                document.getElementById("resultLMIN").style.display = "block";
+                return;
+            }
+            
+            // Расчеты
+            const LMIN = (VOUT * (VINMAX - VOUT)) / (VINMAX * KInd * IOUT * 400e3); // 400 кГц = 400e3 Гц
+            
+            // Преобразуем в мкГн для отображения
+            const LMIN_uH = LMIN * 1e6;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>L<sub>MIN</sub> =</strong> <span class="result-value">${LMIN_uH.toFixed(2)} мкГн</span></p>
+                </div>
+            `;
+            
+            document.getElementById("resultLMIN").innerHTML = resultHTML;
+            document.getElementById("resultLMIN").className = "alert alert-success mt-3";
+            document.getElementById("resultLMIN").style.display = "block";
+        }
+
+        // Расчет IL(MAX)
+        function calculateILMAX() {
+            const IOUTMAX = parseFloat(document.getElementById("ioutmax_ind2").value) / 1000; // перевод в амперы
+            const VOUT = parseFloat(document.getElementById("vout_ind2").value);
+            const VINMAX = parseFloat(document.getElementById("vinmax_ind2").value);
+            const Lo = parseFloat(document.getElementById("lo_ind2").value) * 1e-6; // перевод в Генри
+            
+            // Проверка ввода
+            if (isNaN(IOUTMAX) || isNaN(VOUT) || isNaN(VINMAX) || isNaN(Lo) || IOUTMAX <= 0 || VOUT <= 0 || VINMAX <= 0 || Lo <= 0) {
+                document.getElementById("resultILMAX").innerHTML = "Ошибка: введите положительные числа";
+                document.getElementById("resultILMAX").className = "alert alert-danger mt-3";
+                document.getElementById("resultILMAX").style.display = "block";
+                return;
+            }
+            
+            // Расчеты
+            const ILMAX = Math.sqrt(IOUTMAX**2 + (1/12 * (VOUT * (VINMAX - VOUT) / (VINMAX * Lo * 400e3 * 0.8))**2)); // 400 кГц = 400e3 Гц
+            
+            // Преобразуем в мА для отображения
+            const ILMAX_mA = ILMAX * 1000;
+            
+            // Отображение результатов
+            const resultHTML = `
+                <h3 class="text-success">Результат расчета:</h3>
+                <div class="result-box p-3 border border-success rounded bg-light">
+                    <p class="mb-2"><strong>I<sub>L(MAX)</sub> =</strong> <span class="result-value">${ILMAX_mA.toFixed(2)} мА</span></p>
+                </div>
+            `;
+            
+            document.getElementById("resultILMAX").innerHTML = resultHTML;
+            document.getElementById("resultILMAX").className = "alert alert-success mt-3";
+            document.getElementById("resultILMAX").style.display = "block";
+        }
+
+        // Инициализация калькуляторов при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация первого калькулятора
+            calculateR4R5();
+            
+            // Инициализация второго калькулятора
+            calculateR3();
+            
+            // Инициализация калькулятора индуктора
+            calculateLMIN();
+            
+            // Настройка событий переключения вкладок для Output Voltage
+            const outputVoltageTabs = document.querySelectorAll('#outputVoltageTabs button[data-bs-toggle="tab"]');
+            outputVoltageTabs.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(event) {
+                    const targetId = event.target.getAttribute('data-bs-target').substring(1);
+                    switch(targetId) {
+                        case 'calc-r3':
+                            calculateR3();
+                            break;
+                        case 'calc-vout':
+                            calculateVOUT();
+                            break;
+                        case 'calc-r2':
+                            calculateR2();
+                            break;
+                    }
+                });
+            });
+            
+            // Настройка событий переключения вкладок для Индуктора
+            const inductorTabs = document.querySelectorAll('#inductorTabs button[data-bs-toggle="tab"]');
+            inductorTabs.forEach(tab => {
+                tab.addEventListener('shown.bs.tab', function(event) {
+                    const targetId = event.target.getAttribute('data-bs-target').substring(1);
+                    switch(targetId) {
+                        case 'calc-lmin':
+                            calculateLMIN();
+                            break;
+                        case 'calc-ilmax':
+                            calculateILMAX();
+                            break;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
